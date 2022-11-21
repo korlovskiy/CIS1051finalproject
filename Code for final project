@@ -24,3 +24,74 @@ text = pageObj.extractText()
 for line in text.splitlines()[8:-3]:
     print(line)
     
+    
+#### For flu and tdap, we'll need to use indexing because we need date that corresponds to the respective vaccines. For all others, we'll just need a count of num of doses.
+#Flu – 1 dose annually
+if patient age>=19:
+    if no flu doses:
+        print("get flu vaccine”)
+    if (todays date – date most recent given)>=365:
+        print("get flu vaccine”)
+    else:
+        print("up to date on flu vax”)
+
+#Tdap (tetanus) – 1 dose initially, then one every 10 years
+if patient age>=19:
+    if no Tdap doses:
+        print("get tdap vaccine”)
+    elif (todays date - date of most recent tdap given)>=(365*10):
+        print("it has been 10 years since your last tdap dose, discuss with physician”)
+    else:
+        print("up to date on flu vax”)
+
+#measles, mumps, rubella (MMR) (not dependent on time frame, just dependent on number of doses)
+if patient YOB>=1957 or if patient age<65:
+    if no MMR vaccine:
+        print ("get MMR”)
+    elif count of MMR doses==1:
+        print("You are considered fully vaccinated with the MMR vaccine, but may need a second dose depending on your indication. Please consult with a physician.”)
+    elif count of MMR doses == 2 print("You are fully vaccinated against MMR.”)
+
+
+#Varicella (VAR) (not dependent on time frame, just dependent on number of doses)
+if patient age<50:
+    if no varicella doses:
+        print ("Get varicella vaccine")
+    elif num of varicella doses ==1:
+        print ("Records indicate you currently have 1 dose of the varicella vaccine. To be considered fully vaccinated, you must have 2 doses. Please consult with physician). 
+    elif count of varicella doses == 2:
+        print ("you are fully vaccinated against varicella”)
+if patient age>=50:
+    if no varicella doses or num doses ==1:
+        print ("2 doses of this vaccine are recommended for adults over 50 who have additional risk factors or other indications. Please consult with your physician to see if you are eligible.) 
+
+#Zoster recombinant (RZV) Not sure if we should include?
+if patient age>=50 years(365*50):
+    if no doses:
+        print ("2 doses of RZV is recommended for adults 50 and older. Please consult with your physician.”)
+    elif doses ==1:
+        print("1 more dose recommended to be fully vaccinated.”)
+    elif doses ==2:
+        print("Up to date”)
+	
+if patient age<50:
+    if no doses:
+        print("This vaccine is recommended for adults under 50 if they have an immunocompromising condition. If you believe this may apply to you, please consult with your physician.) 
+
+
+#Human papillomavirus (HPV)
+if 19<= patient age<27:
+    if no doses:
+        print ("It is recommended for adults in your age range to get 2-3 doses of the HPV vaccine. Please consult with physician.")
+    elif num doses ==1 or doses == 2:
+        print ("It is recommended for adults in your age range to get 2-3 doses of the HPV vaccine. If you have 2, you may need a 3rd. Please consult with your physician.")
+    elif num doses ==3:
+        print ("You are fully vaccinated against HPV.")
+
+If 27<= patient age<=45:
+    if no doses at all:
+        print ("You may be eligible to get vaccinated against HPV, please consult with a physician.")
+    elif num doses = 1 or num doses = 2:
+        print ("You may be fully vaccinated against HPV, please consult with your physician to determine if any more vaccines are needed.)
+    elif num doses = 3:
+        print("You are fully vaccinated against HPV.")
