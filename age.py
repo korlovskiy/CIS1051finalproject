@@ -110,12 +110,29 @@ def appropriate_age(file):
         return False
 
 
+# use tabula to read the file as a pdf to csv and manipulate
 def CSV_reading(file):
     if appropriate_age(file):
         print("hello")
 
 
+def isfilename(file):
+    file = file + ".pdf"
+    try:
+        open(file, 'rb')
+        return True
+    except:
+        return False
+
+
 print("Make sure that the file and the code are both in the same folder")
+
 filename = input("Enter the name of the immunization record file without the .pdf: ")
+
+while not isfilename(filename):
+    print("Make sure that the pdf file is in the same folder as the Python program :).")
+    filename = input("Enter the name of the immunization record file without the .pdf: ")
+    isfilename(filename)
+
 
 CSV_reading(filename)
