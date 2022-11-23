@@ -1,3 +1,4 @@
+import datetime
 from datetime import date
 
 today = date.today()
@@ -21,19 +22,179 @@ pageObj = pdfReader.getPage(0)
 # extracting text from page 
 text = pageObj.extractText()
 
-for line in text.splitlines()[8:-3]:
-    print(line)
-    
-    
-#### For flu and tdap, we'll need to use indexing because we need date that corresponds to the respective vaccines. For all others, we'll just need a count of num of doses.
+#for line in text.splitlines()[8:-3]:
+#    print(line)
+
+DOBline = text.splitlines()[4]
+print(DOBline)
+
+
+￼
+import tabula as tb
+import pandas as pd
+# Importing the os library
+import os
+
+# Inbuilt function to remove files
+
+
+# file = "BUNN, KEITH CARMELL.pdf"
+# table = tb.read_pdf(file, pages='all')
+# csv_table = tb.convert_into(file,'pdf_convert8.csv',pages="all")
+
+
+#  print(csv_table)
+
+
+# csv34("immu.pdf")
+
+# The code with run the CSV file if the age is met to be true
+
+import PyPDF2
+from datetime import date
+
+
+def numOfDays(date1, date2):
+    return (date2 - date1).days
+
+
+def c:
+    file = filename + ".pdf"
+
+    pdfFileObject = open(file, 'rb')
+
+    pdfReader = PyPDF2.PdfFileReader(pdfFileObject)
+
+    pageObject = pdfReader.getPage(0)
+
+    text = pageObject.extractText()
+
+    month1 = []
+    day1 = []
+    year1 = []
+
+    for line in text.splitlines()[4:5]:
+        field = line.split("/")
+        month1.append(field[0])
+        day1.append(field[1])
+        year1.append(field[2])
+
+    month = []
+
+    for i in month1:
+        for x in i:
+            if x in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]:
+                month.append(x)
+
+    day = []
+
+    for i in day1:
+        for x in i:
+            if x in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]:
+                day.append(x)
+    year = []
+    for i in year1:
+        for x in i:
+            if x in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]:
+                year.append(x)
+
+    year = year[0:4]
+    monthstr = ""
+    daystr = ""
+    yearstr = ""
+    for i in month:
+        monthstr = monthstr + i
+    for i in day:
+        daystr = daystr + i
+    for i in year:
+        yearstr = yearstr + i
+
+    intmonth = int(monthstr)
+    intday = int(daystr)
+    intyear = int(yearstr)
+
+    date1 = date(intyear, intmonth, intday)
+    date2 = today
+
+    return date2
+    day = numOfDays(date1, date2)
+
+    user_age = int(day / 366)
+    return user_age
+
+
+def appropriate_age(file):
+    user_age = age(file)
+    if user_age >= 19:
+        return True
+    else:
+        print("You need to be 19 and up to use this code: ")
+        print("Come back in", 19 - user_age, "year(s).")
+        return False
+
+
+
+file = open("orlovskiy.csv","r")
+
+vaccine_name=[]
+
+vaccine_dose=[]
+
+vaccine_date=[]
+
+for line in file.readlines():
+    field = line.split(",")
+    vaccine_name.append(field[0])
+    vaccine_dose.append(field[1])
+    vaccine_date.append(field[2])
+
+#print(vaccine_name)
+
+position_flu=[]
+index = -1
+for item in vaccine_name:
+    index +=1
+    #print(item,index)
+    if "flu" in item:
+        position_flu.append(index)
+
+max_flu = max(position_flu)
+
+most_recent_flu_date = vaccine_date[max_flu]
+#print(most_recent_flu_date)
+
+flu_date_fields = most_recent_flu_date.split("/")
+
+print(flu_date_fields)
+
+new_int_list_flu =[]
+
+for num in flu_date_fields:
+    num = int(num)
+    new_int_list_flu.append(num)
+
+print(new_int_list_flu)
+
+flu_year = new_int_list_flu[2]
+flu_month = new_int_list_flu[0]
+flu_day = new_int_list_flu[1]
+
+
+flu_date = date(flu_year, flu_month, flu_day)
+
+print(flu_date)
+
 #Flu – 1 dose annually
-if patient age>=19:
-    if no flu doses:
+if age(filename)>=19:
+    if "flu" not in vaccine_name:
         print("get flu vaccine.")
-    if (todays date – date most recent given)>=365:
+    elif numOfDays(flu_date, today)>=365:
         print("get flu vaccine.")
     else:
         print("up to date on flu vax.")
+else:
+    print("Come back in", 19 - user_age, "year(s).")
+    
 
 #Tdap (tetanus) – 1 dose initially, then one every 10 years
 if patient age>=19:
