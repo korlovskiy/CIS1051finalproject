@@ -1,14 +1,15 @@
 import tabula as tb
 import pandas as pd
+# Importing the os library
+import os
+
+# Inbuilt function to remove files
+
 
 # file = "BUNN, KEITH CARMELL.pdf"
 # table = tb.read_pdf(file, pages='all')
 # csv_table = tb.convert_into(file,'pdf_convert8.csv',pages="all")
 
-
-# def csv34(item):
-# table = tb.read_pdf(item, pages='all')
-# csv_table = tb.convert_into(item, 'pdf_convert91.csv')
 
 #  print(csv_table)
 
@@ -98,7 +99,7 @@ def age(filename):
     date2 = date(today_year, today_month, today_day)
     day = numOfDays(date1, date2)
 
-    user_age = int(day / 365)
+    user_age = int(day / 366)
     return user_age
 
 
@@ -107,13 +108,35 @@ def appropriate_age(file):
     if user_age >= 19:
         return True
     else:
+        print("You need to be 19 and up to use this code: ")
+        print("Come back in", 19 - user_age, "year(s).")
         return False
 
 
 # use tabula to read the file as a pdf to csv and manipulate
-def CSV_reading(file):
+def CSV_creation(file):
     if appropriate_age(file):
-        print("hello")
+        file = file + ".pdf"
+        tb.read_pdf(file, pages="all")
+        name = 'imm_to_csv'
+        tb.convert_into(file, name, pages="all")
+        # os.remove('pdf_convert102.csv')
+        # print("File removed successfully")
+        return name
+def CSV_reading(file):
+    name = CSV_creation(file)
+    firstname = []
+    lastname = []
+    racetime = []
+    personalbest = []
+    data = open(filename, 'r')
+    for line in data:
+        fields = line.split(",")
+        firstname.append(fields[0])
+        lastname.append(fields[1])
+        racetime.append(int(fields[2]))
+        personalbest.append(int(fields[3]))
+    return firstname, lastname, racetime, personalbest
 
 
 def isfilename(file):
@@ -134,5 +157,4 @@ while not isfilename(filename):
     filename = input("Enter the name of the immunization record file without the .pdf: ")
     isfilename(filename)
 
-
-CSV_reading(filename)
+CSV_creation(filename)
