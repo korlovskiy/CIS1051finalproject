@@ -58,7 +58,7 @@ def numOfDays(date1, date2):
     return (date2 - date1).days
 
 
-def c:
+def age(filename):
     file = filename + ".pdf"
 
     pdfFileObject = open(file, 'rb')
@@ -186,7 +186,7 @@ print(flu_date)
 
 #Flu – 1 dose annually
 if age(filename)>=19:
-    if "flu" not in vaccine_name:
+    if "Influenza" not in vaccine_name: #should use names in headers
         print("get flu vaccine.")
     elif numOfDays(flu_date, today)>=365:
         print("get flu vaccine.")
