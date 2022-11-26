@@ -1,0 +1,302 @@
+import datetime
+from datetime import date
+
+today = date.today()
+
+# prints 2022-11-20
+
+import PyPDF2
+
+import tabula as tb
+import pandas as pd
+# Importing the os library
+import os
+
+# Inbuilt function to remove files
+try:
+
+    filename = "immrecord"
+
+    file = filename + ".pdf"
+    table = tb.read_pdf(file, pages='all')
+    file2 = filename + ".csv"
+    csv_table = tb.convert_into(file, file2, pages="all")
+except:
+    print("made already")
+
+#  print(csv_table)
+
+
+# csv34("immu.pdf")
+
+# The code with run the CSV file if the age is met to be true
+
+import PyPDF2
+from datetime import date
+
+
+def numOfDays(date1, date2):
+    return (date2 - date1).days
+
+
+def age(filename):
+    file = filename + ".pdf"
+
+    pdfFileObject = open(file, 'rb')
+
+    pdfReader = PyPDF2.PdfFileReader(pdfFileObject)
+
+    pageObject = pdfReader.getPage(0)
+
+    text = pageObject.extractText()
+
+    month1 = []
+    day1 = []
+    year1 = []
+
+    for line in text.splitlines()[4:5]:
+        field = line.split("/")
+        month1.append(field[0])
+        day1.append(field[1])
+        year1.append(field[2])
+
+    month = []
+
+    for i in month1:
+        for x in i:
+            if x in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]:
+                month.append(x)
+
+    day = []
+
+    for i in day1:
+        for x in i:
+            if x in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]:
+                day.append(x)
+    year = []
+    for i in year1:
+        for x in i:
+            if x in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]:
+                year.append(x)
+
+    year = year[0:4]
+    monthstr = ""
+    daystr = ""
+    yearstr = ""
+    for i in month:
+        monthstr = monthstr + i
+    for i in day:
+        daystr = daystr + i
+    for i in year:
+        yearstr = yearstr + i
+
+    intmonth = int(monthstr)
+    intday = int(daystr)
+    intyear = int(yearstr)
+
+    import datetime
+
+    current_time = datetime.datetime.now()
+
+    today_year = current_time.year
+
+    today_month = current_time.month
+
+    today_day = current_time.day
+
+    today_year = int(today_year)
+    today_month = int(today_month)
+    today_day = int(today_day)
+
+    date1 = date(intyear, intmonth, intday)
+    date2 = date(today_year, today_month, today_day)
+    day = numOfDays(date1, date2)
+
+    user_age = int(day / 366)
+    return user_age
+
+
+def appropriate_age(file):
+    user_age = age(file)
+    if user_age >= 19:
+        return True
+    else:
+        print("You need to be 19 and up to use this code: ")
+        print("Come back in", 19 - user_age, "year(s).")
+        return False
+
+
+file = open(filename + ".csv", "r")
+
+vaccine_name = []
+
+vaccine_dose = []
+
+vaccine_date = []
+
+for line in file.readlines():
+    field = line.split(",")
+    vaccine_name.append(field[0])
+    vaccine_dose.append(field[1])
+    vaccine_date.append(field[2])
+
+# print(vaccine_name)
+position_HPV = []
+index_1 = -1
+for item in vaccine_name:
+    index_1 += 1
+    # print(item,index)
+    if "HPV" in item:
+        position_HPV.append(index_1)
+
+max_HPV = max(position_HPV)
+
+most_recent_HPV_dose = vaccine_dose[max_HPV]
+most_recent_HPV_dose = int(most_recent_HPV_dose)
+
+# Human papillomavirus (HPV)
+if 19 <= age(filename) < 27:
+    if "HPV" not in vaccine_name:
+        print(
+            "It is recommended for adults in your age range to get 2-3 doses of the HPV vaccine. Please consult with physician.")
+    elif most_recent_HPV_dose == 1 or most_recent_HPV_dose == 2:
+        print(
+            "It is recommended for adults in your age range to get 2-3 doses of the HPV vaccine. If you have 2, you may need a 3rd. Please consult with your physician.")
+    elif most_recent_HPV_dose == 3:
+        print("You are fully vaccinated against HPV.")
+
+elif 27 <= age(filename) == 45:
+    if most_recent_HPV_dose == 0:
+        print("You may be eligible to get vaccinated against HPV, please consult with a physician.")
+    elif most_recent_HPV_dose == 1 or most_recent_HPV_dose == 2:
+        print(
+            "You may be fully vaccinated against HPV, please consult with your physician to determine if any more vaccines are needed.")
+    elif most_recent_HPV_dose == 3:
+        print("You are fully vaccinated against HPV.")
+
+position_flu = []
+index = -1
+for item in vaccine_name:
+    index += 1
+    # print(item,index)
+    if "flu" in item:
+        position_flu.append(index)
+
+max_flu = max(position_flu)
+
+most_recent_flu_date = vaccine_date[max_flu]
+# print(most_recent_flu_date)
+
+flu_date_fields = most_recent_flu_date.split("/")
+
+new_int_list_flu = []
+
+for num in flu_date_fields:
+    num = int(num)
+    new_int_list_flu.append(num)
+
+flu_year = new_int_list_flu[2]
+flu_month = new_int_list_flu[0]
+flu_day = new_int_list_flu[1]
+
+flu_date = date(flu_year, flu_month, flu_day)
+
+# Flu – 1 dose annually
+if age(filename) >= 19:
+    if "flu" not in vaccine_name:
+        print("get flu vaccine.")
+    elif numOfDays(flu_date, today) >= 365:
+        print("get flu vaccine.")
+    else:
+        print("up to date on flu vax.")
+else:
+    print("Come back in", 19 - age(filename), "year(s).")
+
+    # print(vaccine_name)
+position_rzv = []
+index_2 = -1
+for item in vaccine_name:
+    index_2 += 1
+    # print(item,index)
+    if "zos" in item:
+        position_rzv.append(index_2)
+if len(position_rzv) >=1:
+
+    max_rzv = max(position_rzv)
+
+    most_recent_rzv_dose = vaccine_dose[max_rzv]
+    most_recent_rzv_dose = int(most_recent_rzv_dose)
+elif len(position_rzv) == 0:
+    most_recent_rzv_dose = 0
+
+
+
+
+# Zoster recombinant (RZV)
+if age(filename) >= 50:
+    if most_recent_rzv_dose == 0:
+        print("2 doses of RZV is recommended for adults 50 and older. Please consult with your physician.")
+    elif most_recent_rzv_dose == 1:
+        print("1 more dose recommended to be fully vaccinated.")
+    elif most_recent_rzv_dose == 2:
+        print("Up to date.")
+if age(filename)<50:
+    if most_recent_rzv_dose == 0:
+        print("This vaccine is recommended for adults under 50 if they have an immunocompromising condition. If you believe this may apply to you, please consult with your physician.")
+
+    # print(vaccine_name)
+position_var = []
+index_2 = -1
+for item in vaccine_name:
+    index_2 += 1
+    # print(item,index)
+    if "cella" in item:
+        position_var.append(index_2)
+if len(position_var) >=1:
+
+    max_var = max(position_var)
+
+    most_recent_var_dose = vaccine_dose[max_var]
+    most_recent_var_dose = int(most_recent_var_dose)
+elif len(position_var) == 0:
+    most_recent_var_dose = 0
+
+
+if age(filename)<50:
+    if most_recent_var_dose == 0:
+        print ("Get varicella vaccine")
+    elif most_recent_var_dose ==1:
+        print ("Records indicate you currently have 1 dose of the varicella vaccine. To be considered fully vaccinated, you must have 2 doses. Please consult with physician.")
+    elif most_recent_var_dose == 2:
+        print ("you are fully vaccinated against varicella.")
+if age(filename)>=50:
+    if most_recent_var_dose == 0 or most_recent_var_dose ==1:
+        print ("2 doses of this vaccine are recommended for adults over 50 who have additional risk factors or other indications. Please consult with your physician to see if you are eligible.")
+
+    # print(vaccine_name)
+position_mmr = []
+index_2 = -1
+for item in vaccine_name:
+    index_2 += 1
+    # print(item,index)
+    if "MMR" in item:
+        position_mmr.append(index_2)
+if len(position_mmr) >=1:
+
+    max_mmr = max(position_mmr)
+
+    most_recent_mmr_dose = vaccine_dose[max_mmr]
+    most_recent_mmr_dose = int(most_recent_mmr_dose)
+elif len(position_mmr) == 0:
+    most_recent_mmr_dose = 0
+
+
+
+#measles, mumps, rubella (MMR) (not dependent on time frame, just dependent on number of doses)
+if age(filename) < 65:
+    if most_recent_mmr_dose == 0:
+        print ("get MMR.")
+    elif most_recent_mmr_dose==1:
+        print("You are considered fully vaccinated with the MMR vaccine, but may need a second dose depending on your indication. Please consult with a physician.")
+    elif most_recent_mmr_dose == 2:
+        print("You are fully vaccinated against MMR.")
