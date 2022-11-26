@@ -1,57 +1,25 @@
-import datetime
-from datetime import date
-
-today = date.today()
-print(today)
-#prints 2022-11-20
-
 import PyPDF2
-
-# creating a pdf file object 
-pdfFileObj = open("immrecord.pdf",'rb') 
-    
-# creating a pdf reader object 
-pdfReader = PyPDF2.PdfFileReader(pdfFileObj) 
-    
-# printing number of pages in pdf file 
-#print(pdfReader.numPages) 
-    
-# creating a page object 
-pageObj = pdfReader.getPage(0) 
-    
-# extracting text from page 
-text = pageObj.extractText()
-
-#for line in text.splitlines()[8:-3]:
-#    print(line)
-
-DOBline = text.splitlines()[4]
-print(DOBline)
-
-
-￼
 import tabula as tb
-import pandas as pd
 # Importing the os library
 import os
 
 # Inbuilt function to remove files
 
-
-# file = "BUNN, KEITH CARMELL.pdf"
-# table = tb.read_pdf(file, pages='all')
-# csv_table = tb.convert_into(file,'pdf_convert8.csv',pages="all")
-
-
-#  print(csv_table)
-
-
-# csv34("immu.pdf")
-
-# The code with run the CSV file if the age is met to be true
-
-import PyPDF2
+import datetime
 from datetime import date
+
+today = date.today()
+# print(today)
+# prints 2022-11-26
+
+try:
+    filename = "immrecord"
+    file = filename + ".pdf"
+    table = tb.read_pdf(file, pages='all')
+    file2 = filename + ".csv"
+    csv_table = tb.convert_into(file, file2, pages="all")
+except:
+    print("made already")
 
 
 def numOfDays(date1, date2):
@@ -115,8 +83,6 @@ def age(filename):
 
     date1 = date(intyear, intmonth, intday)
     date2 = today
-
-    return date2
     day = numOfDays(date1, date2)
 
     user_age = int(day / 366)
@@ -133,138 +99,75 @@ def appropriate_age(file):
         return False
 
 
+file = open(filename + ".csv", "r")
 
-file = open("orlovskiy.csv","r")
+vaccine_name = []
 
-vaccine_name=[]
+vaccine_dose = []
 
-vaccine_dose=[]
+vaccine_date = []
 
-vaccine_date=[]
-
+vaccine_dose_hepA = []
+vaccine_dose_hepB = []
+vaccine_dose_Hib = []
 for line in file.readlines():
     field = line.split(",")
     vaccine_name.append(field[0])
     vaccine_dose.append(field[1])
     vaccine_date.append(field[2])
+    vaccine_dose_hepA.append(field[3])
+    vaccine_dose_hepB.append(field[2])
+    vaccine_dose_Hib.append(field[2])
 
-#print(vaccine_name)
 
-position_flu=[]
+# Flu - 1 dose anually (COMPLETE)
+
+position_flu = []
 index = -1
 for item in vaccine_name:
-    index +=1
-    #print(item,index)
+    index += 1
+    # print(item,index)
     if "flu" in item:
         position_flu.append(index)
 
 max_flu = max(position_flu)
 
 most_recent_flu_date = vaccine_date[max_flu]
-#print(most_recent_flu_date)
+# print(most_recent_flu_date)
 
 flu_date_fields = most_recent_flu_date.split("/")
 
-print(flu_date_fields)
+# print(flu_date_fields)
 
-new_int_list_flu =[]
+new_int_list_flu = []
 
 for num in flu_date_fields:
     num = int(num)
     new_int_list_flu.append(num)
 
-print(new_int_list_flu)
+# print(new_int_list_flu)
 
 flu_year = new_int_list_flu[2]
 flu_month = new_int_list_flu[0]
 flu_day = new_int_list_flu[1]
 
-
 flu_date = date(flu_year, flu_month, flu_day)
+# print(flu_date)
 
-print(flu_date)
-
-#Flu – 1 dose annually
-if age(filename)>=19:
-    if "Influenza" not in vaccine_name: #should use names in headers
+if age(filename) >= 19:
+    if "Influenza" not in vaccine_name:  # we should go off the vax name used in the headers
         print("get flu vaccine.")
-    elif numOfDays(flu_date, today)>=365:
+    elif numOfDays(flu_date, today) >= 365:
         print("get flu vaccine.")
     else:
         print("up to date on flu vax.")
-else:
-    print("Come back in", 19 - user_age, "year(s).")
-    
 
-#Tdap (tetanus) – 1 dose initially, then one every 10 years
-if patient age>=19:
-    if no Tdap doses:
-        print("get tdap vaccine.")
-    elif (todays date - date of most recent tdap given)>=(365*10):
-        print("it has been 10 years since your last tdap dose, discuss with physician.")
-    else:
-        print("up to date on flu vax.")
-
-#measles, mumps, rubella (MMR) (not dependent on time frame, just dependent on number of doses)
-if patient YOB>=1957 or if patient age<65:
-    if no MMR vaccine:
-        print ("get MMR.")
-    elif count of MMR doses==1:
-        print("You are considered fully vaccinated with the MMR vaccine, but may need a second dose depending on your indication. Please consult with a physician.")
-    elif count of MMR doses == 2 print("You are fully vaccinated against MMR.")
-
-
-#Varicella (VAR) (not dependent on time frame, just dependent on number of doses)
-if patient age<50:
-    if no varicella doses:
-        print ("Get varicella vaccine")
-    elif num of varicella doses ==1:
-        print ("Records indicate you currently have 1 dose of the varicella vaccine. To be considered fully vaccinated, you must have 2 doses. Please consult with physician.") 
-    elif count of varicella doses == 2:
-        print ("you are fully vaccinated against varicella.")
-if patient age>=50:
-    if no varicella doses or num doses ==1:
-        print ("2 doses of this vaccine are recommended for adults over 50 who have additional risk factors or other indications. Please consult with your physician to see if you are eligible.") 
-
-#Zoster recombinant (RZV) 
-if patient age>=50 years(365*50):
-    if no doses:
-        print ("2 doses of RZV is recommended for adults 50 and older. Please consult with your physician.")
-    elif doses ==1:
-        print("1 more dose recommended to be fully vaccinated.")
-    elif doses ==2:
-        print("Up to date.")
-	
-if patient age<50:
-    if no doses:
-        print("This vaccine is recommended for adults under 50 if they have an immunocompromising condition. If you believe this may apply to you, please consult with your physician.")
-        
-
-
-#Human papillomavirus (HPV)
-if 19<= patient age<27:
-    if no doses:
-        print ("It is recommended for adults in your age range to get 2-3 doses of the HPV vaccine. Please consult with physician.")
-    elif num doses ==1 or doses == 2:
-        print ("It is recommended for adults in your age range to get 2-3 doses of the HPV vaccine. If you have 2, you may need a 3rd. Please consult with your physician.")
-    elif num doses ==3:
-        print ("You are fully vaccinated against HPV.")
-
-if 27<= patient age<=45:
-    if no doses at all:
-        print ("You may be eligible to get vaccinated against HPV, please consult with a physician.")
-    elif num doses = 1 or num doses = 2:
-        print ("You may be fully vaccinated against HPV, please consult with your physician to determine if any more vaccines are needed.")
-    elif num doses = 3:
-        print("You are fully vaccinated against HPV.")
-        
-
-#PNEUM COMPLETE 
-position_pneum=[]
+# PNEUM COMPLETE
+position_pneum = []
 pneum_index = -1
 for item in vaccine_name:
-    pneum_index +=1
-    #print(item,index)
+    pneum_index += 1
+    # print(item,index)
     if "PCV" or "PPSV" in item:
         position_pneum.append(pneum_index)
 
@@ -272,29 +175,22 @@ max_pneum = max(position_pneum)
 
 most_recent_pneum_dose = vaccine_dose[max_pneum]
 
-
-#Pneumococcal (PCV15, PCV20, PPSV23) COMPLETE (just make sure age function works correctly)
+# Pneumococcal (PCV15, PCV20, PPSV23) COMPLETE (just make sure age function works correctly)
 if age(filename) >= 65:
     if "Pneumococcal" not in vaccine_name:
         print("Adults 65 and up require two doses of the pneumococcal vaccine. Please consult with your physician.")
-    elif most_recent_pneum_dose ==1:
-        print ("Adults 65 and up require two doses of the pneumococcal vaccine. Please consult with your physician.")
-    elif most_recent_pneum_dose ==2:
+    elif most_recent_pneum_dose == 1:
+        print("Adults 65 and up require two doses of the pneumococcal vaccine. Please consult with your physician.")
+    elif most_recent_pneum_dose == 2:
         print("You are fully vaccinated with the pneumococcal vaccine.")
 
-elif 19<=age(filename)<65:
+elif 19 <= age(filename) < 65:
     if "Pneumococcal" not in vaccine_name:
-        print("Adults between the ages of 19 and 64 may qualify to receive the pneumococcal vaccine based on medical conditions or other risk factors. Please consult with your doctor, and for more information visit linktocdcwebsite.")
-  
+        print(
+            "Adults between the ages of 19 and 64 may qualify to receive the pneumococcal vaccine based on medical conditions or other risk factors. Please consult with your doctor, and for more information visit linktocdcwebsite.")
 
-#Hepatitis A (HepA) COMPLETE
-
-vaccine_dose_hepA = []
-for line in file.readlines():
-    field = line.split(",")
-    vaccine_dose_hepA.append(field[3])
-
-position_hepA=[]
+# Hepatitis A (HepA) COMPLETE
+position_hepA = []
 hepA_index = -1
 for item in vaccine_name:
     hepA_index +=1
@@ -304,106 +200,248 @@ for item in vaccine_name:
 
 max_hepA = max(position_hepA)
 
-most_recent_hepA_dose = vaccine_dose_hepA[max_hepA]
+most_recent_hepA_dose = int(vaccine_dose_hepA[max_hepA])
 
 
-if age(filename)>=19:
-    if ("Hep A" not in vaccine_name) or most_recent_hepA_dose==1:
+if age(filename) >= 19:
+    if ("Hep A" not in vaccine_name) or most_recent_hepA_dose == 1:
         print("It is recommended that adults have 2 or 3 doses of the HepA vaccine depending on the vaccine type. If you are 19 years or older, you may be eligible to receive this vaccine based on risk factors or other indiciations. Please consult with your physician.")
-    elif most_recent_hepA_dose==2:
+    elif most_recent_hepA_dose == 2:
 
-        print("It is recommended that adults have 2 or 3 doses of the HepA vaccine depending on vaccine type and indication. If you have 2 doses, you may need a third. Please consult with your physician.")   
-    elif most_recent_hepA_dose==3:
+        print("It is recommended that adults have 2 or 3 doses of the HepA vaccine depending on vaccine type and indication. If you have 2 doses, you may need a third. Please consult with your physician.")
+    elif most_recent_hepA_dose == 3:
         print("You are fully vaccinated with the HepA vaccine.")
 
-        
-#Hepatitis B (HepB) COMPLETE
+# Hepatitis B (HepB) COMPLETE
 
-vaccine_dose_hepB = []
-for line in file.readlines():
-    field = line.split(",")
-    vaccine_dose_hepB.append(field[2])
 
-position_hepB=[]
+
+position_hepB = []
 hepB_index = -1
+
 for item in vaccine_name:
-    hepB_index +=1
-    #print(item,index)
-    if "Hep B" or "HepB" in item:
-        position_hepB.append(hepB_index)
+    hepB_index += 1
 
-max_hepB = max(position_hepB)
+    # print(item,index)
+    if "Hep B" and "HepB" in item:
 
-most_recent_hepB_dose = vaccine_dose_hepB[max_hepB]
+        position_hepB.append(item)
+if len(position_hepB) >=1:
 
-if 19<=age(filename)<60:
-    if ("Hep B" not in vaccine_name) or most_recent_hepB_dose == 1 or most_recent_hepB_dose == 2 or most_recent_hepB_dose==3:
+    max_hepB = max(position_hepB)
+
+    most_recent_hepB_dose = vaccine_dose[max_hepB]
+    most_recent_hepB_dose = int(most_recent_hepB_dose)
+elif len(position_hepB) == 0:
+    most_recent_hepB_dose = 0
+
+
+
+
+
+if 19 <= age(filename) < 60:
+    if ("Hep B" not in vaccine_name) or most_recent_hepB_dose == 1 or most_recent_hepB_dose == 2 or most_recent_hepB_dose == 3:
         print("The CDC recommends 2,3, or 4 doses of the HepB vaccine for adults under the age of 60 depending on vaccine or condition. Please consult with your physician to determine how many more doses you need to be considered fully vaccinated.")
     elif most_recent_hepB_dose == 4:
-	print("You are fully vaccinated with the HepB vaccine.")
+        print("You are fully vaccinated with the HepB vaccine.")
 
-if age(filename)>=60:
-    print("For adults over the age of 60, the CDC recommends the HepB vaccine for adults depending on the patient indication and the vaccine. Please consult with your physician to determine if you are eligible for the HepB vaccine and how many doses you need to be considered fully vaccinated.")
-    
+if age(filename) >= 60:
+    print( "For adults over the age of 60, the CDC recommends the HepB vaccine for adults depending on the patient indication and the vaccine. Please consult with your physician to determine if you are eligible for the HepB vaccine and how many doses you need to be considered fully vaccinated.")
 
-#Meningococcal A, C, W, Y (MCV4) COMPLETE
-position_MCV4=[]
+# Meningococcal A, C, W, Y (MCV4) COMPLETE
+position_MCV4 = []
 MCV4_index = -1
 for item in vaccine_name:
-    MCV4_index +=1
-    #print(item,index)
+    MCV4_index += 1
+    # print(item,index)
     if "MCV4" in item:
-        position_MCV4(MCV4_index)
+        position_MCV4.append(MCV4_index)
 
-max_MCV4 = max(MCV4_index)
+max_MCV4 = max(position_MCV4)
 
-most_recent_MCV4_dose = vaccine_dose[max_MCV4]
+most_recent_MCV4_dose = int(vaccine_dose[max_MCV4])
 
-if age(filename)>=19:
+if age(filename) >= 19:
     if most_recent_MCV4_dose == 2:
-        print ("You are fully vaccinated with the MenACWY vaccine.")
-    elif ("Meningococcal" not in vaccine_name) or most_recent_MCV4_dose==1:
+        print("You are fully vaccinated with the MenACWY vaccine.")
+    elif ("Meningococcal" not in vaccine_name) or most_recent_MCV4_dose == 1:
         print("For adults 19 and older, the  CDC recommends 1 or 2 doses depending on indication. Please consult with your physician to determine if you are eligible to receive the MenACWY vaccine.")
 
-#Meningococcal B (MenB) COMPLETE
-position_MenB=[]
+# Meningococcal B (MenB) COMPLETE
+position_MenB = []
 MenB_index = -1
 for item in vaccine_name:
-    MenB_index +=1
-    #print(item,index)
+    MenB_index += 1
+    # print(item,index)
     if "Meningococcal B" in item:
         position_MenB(MenB_index)
+if len(position_MenB) >=1:
+    max_MenB = max(position_MenB)
 
-max_MenB = max(MenB_index)
+    most_recent_MenB_dose = int(vaccine_dose[max_MenB])
+elif len(position_MenB) == 0:
+    most_recent_MenB_dose = 0
 
-most_recent_MenB_dose = vaccine_dose[max_MenB]
 
-if age(filename)>=19:
-    if ("Meningococcal B" not in vaccine_name) or most_recent_MenB_dose ==1 or most_recent_MenB_dose ==2: 
+if age(filename) >= 19:
+    if ("Meningococcal B" not in vaccine_name) or most_recent_MenB_dose == 1 or most_recent_MenB_dose == 2:
         print("For adults 19 and older, the  CDC recommends 2 or 3 doses depending on indication. Please consult with your physician to determine if you are eligible to receive the MenB vaccine.")
-    elif most_recent_MenB_dose==3:
-	print("You are fully vaccinated with the MenB vaccine.")
+    elif most_recent_MenB_dose == 3:
+        print("You are fully vaccinated with the MenB vaccine.")
 
-#Haemophilus influenzae type b (Hib) COMPLETE
-vaccine_dose_Hib = []
-for line in file.readlines():
-    field = line.split(",")
-    vaccine_dose_Hib.append(field[2])
+# Haemophilus influenzae type b (Hib) COMPLETE
 
-position_Hib=[]
+
+position_Hib = []
 Hib_index = -1
 for item in vaccine_name:
-    Hib_index +=1
-    #print(item,index)
+    Hib_index += 1
+    # print(item,index)
     if "Hib" in item:
         position_Hib.append(Hib_index)
 
-max_Hib = max(position_Hib)
+if len(position_Hib) >=1:
+    max_Hib = max(position_Hib)
 
-most_recent_Hib_dose = vaccine_dose_hepA[max_Hib]
-if age(filename)>=19:
-    if ("Hib" not in vaccine_name) or most_recent_Hib_dose<3:
+    most_recent_Hib_dose = int(vaccine_dose[max_Hib])
+elif len(position_Hib) == 0:
+    most_recent_Hib_dose = 0
+
+
+if age(filename) >= 19:
+    if ("Hib" not in vaccine_name) or most_recent_Hib_dose < 3:
         print("For adults 19 and older, the  CDC recommends 1 or 3 doses depending on indication. Please consult with your physician to determine if you are eligible to receive the Hib vaccine and how many doses you need.")
     elif most_recent_Hib_dose == 3:
         print("You are fully vaccinated with the Hib vaccine.")
 
+
+# print(vaccine_name)
+position_HPV = []
+index_1 = -1
+for item in vaccine_name:
+    index_1 += 1
+    # print(item,index)
+    if "HPV" in item:
+        position_HPV.append(index_1)
+
+if len(position_HPV) >=1:
+
+    max_HPV = max(position_HPV)
+
+    most_recent_HPV_dose = vaccine_dose[max_HPV]
+    most_recent_mmr_dose = int(most_recent_HPV_dose)
+elif len(position_HPV) == 0:
+    most_recent_HPV_dose = 0
+
+
+
+# Human papillomavirus (HPV)
+if 19 <= age(filename) < 27:
+    if "HPV" not in vaccine_name:
+        print(
+            "It is recommended for adults in your age range to get 2-3 doses of the HPV vaccine. Please consult with physician.")
+    elif most_recent_HPV_dose == 1 or most_recent_HPV_dose == 2:
+        print(
+            "It is recommended for adults in your age range to get 2-3 doses of the HPV vaccine. If you have 2, you may need a 3rd. Please consult with your physician.")
+    elif most_recent_HPV_dose == 3:
+        print("You are fully vaccinated against HPV.")
+
+elif 27 <= age(filename) == 45:
+    if most_recent_HPV_dose == 0:
+        print("You may be eligible to get vaccinated against HPV, please consult with a physician.")
+    elif most_recent_HPV_dose == 1 or most_recent_HPV_dose == 2:
+        print(
+            "You may be fully vaccinated against HPV, please consult with your physician to determine if any more vaccines are needed.")
+    elif most_recent_HPV_dose == 3:
+        print("You are fully vaccinated against HPV.")
+
+
+
+    # print(vaccine_name)
+position_rzv = []
+index_2 = -1
+for item in vaccine_name:
+    index_2 += 1
+    # print(item,index)
+    if "zos" in item:
+        position_rzv.append(index_2)
+if len(position_rzv) >=1:
+
+    max_rzv = max(position_rzv)
+
+    most_recent_rzv_dose = vaccine_dose[max_rzv]
+    most_recent_rzv_dose = int(most_recent_rzv_dose)
+elif len(position_rzv) == 0:
+    most_recent_rzv_dose = 0
+
+
+
+
+# Zoster recombinant (RZV)
+if age(filename) >= 50:
+    if most_recent_rzv_dose == 0:
+        print("2 doses of RZV is recommended for adults 50 and older. Please consult with your physician.")
+    elif most_recent_rzv_dose == 1:
+        print("1 more dose recommended to be fully vaccinated.")
+    elif most_recent_rzv_dose == 2:
+        print("Up to date.")
+if age(filename)<50:
+    if most_recent_rzv_dose == 0:
+        print("This vaccine is recommended for adults under 50 if they have an immunocompromising condition. If you believe this may apply to you, please consult with your physician.")
+
+    # print(vaccine_name)
+position_var = []
+index_2 = -1
+for item in vaccine_name:
+    index_2 += 1
+    # print(item,index)
+    if "cella" in item:
+        position_var.append(index_2)
+if len(position_var) >=1:
+
+    max_var = max(position_var)
+
+    most_recent_var_dose = vaccine_dose[max_var]
+    most_recent_var_dose = int(most_recent_var_dose)
+elif len(position_var) == 0:
+    most_recent_var_dose = 0
+
+
+if age(filename)<50:
+    if most_recent_var_dose == 0:
+        print ("Get varicella vaccine")
+    elif most_recent_var_dose ==1:
+        print ("Records indicate you currently have 1 dose of the varicella vaccine. To be considered fully vaccinated, you must have 2 doses. Please consult with physician.")
+    elif most_recent_var_dose == 2:
+        print ("you are fully vaccinated against varicella.")
+if age(filename)>=50:
+    if most_recent_var_dose == 0 or most_recent_var_dose ==1:
+        print ("2 doses of this vaccine are recommended for adults over 50 who have additional risk factors or other indications. Please consult with your physician to see if you are eligible.")
+
+    # print(vaccine_name)
+position_mmr = []
+index_2 = -1
+for item in vaccine_name:
+    index_2 += 1
+    # print(item,index)
+    if "MMR" in item:
+        position_mmr.append(index_2)
+if len(position_mmr) >=1:
+
+    max_mmr = max(position_mmr)
+
+    most_recent_mmr_dose = vaccine_dose[max_mmr]
+    most_recent_mmr_dose = int(most_recent_mmr_dose)
+elif len(position_mmr) == 0:
+    most_recent_mmr_dose = 0
+
+
+
+#measles, mumps, rubella (MMR) (not dependent on time frame, just dependent on number of doses)
+if age(filename) < 65:
+    if most_recent_mmr_dose == 0:
+        print ("get MMR.")
+    elif most_recent_mmr_dose==1:
+        print("You are considered fully vaccinated with the MMR vaccine, but may need a second dose depending on your indication. Please consult with a physician.")
+    elif most_recent_mmr_dose == 2:
+        print("You are fully vaccinated against MMR.")
