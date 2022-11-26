@@ -118,6 +118,7 @@ for line in file.readlines():
     vaccine_dose_hepA.append(field[3])
     vaccine_dose_hepB.append(field[2])
     vaccine_dose_Hib.append(field[2])
+    vaccine_date_Tdap.append(field[3])
 
 
 # Flu - 1 dose anually (COMPLETE)
@@ -163,14 +164,48 @@ if age(filename) >= 19:
         print("up to date on flu vax.")
      
      
- #Tdap (tetanus) – 1 dose initially, then one every 10 years
- if age(filename>=19:
-    if no Tdap doses:
+ #Tdap COMPLETE
+position_Tdap = []
+Tdap_index = -1
+
+for item in vaccine_name:
+    Tdap_index += 1
+
+    # print(item,index)
+    if "dap" in item:
+
+        position_Tdap.append(Tdap_index)
+
+if len(position_Tdap) >=1:
+    max_Tdap = max(position_Tdap)
+
+
+    most_recent_Tdap_date = vaccine_date_Tdap[max_Tdap]
+
+
+    Tdap_date_fields = most_recent_Tdap_date.split("/")
+
+    new_int_list_Tdap= []
+
+    for num in Tdap_date_fields:
+        num = int(num)
+        new_int_list_Tdap.append(num)
+
+    Tdap_year = new_int_list_Tdap[2]
+    Tdap_month = new_int_list_Tdap[0]
+    Tdap_day = new_int_list_Tdap[1]
+
+    Tdap_date = date(Tdap_year, Tdap_month, Tdap_day)
+
+
+#Tdap (tetanus) – 1 dose initially, then one every 10 years
+if age(filename)>= 19:
+    if most_recent_Tdap_date == 0:
         print("get tdap vaccine.")
-    elif numOfDays(flu_date, today)>=(365*10):
+    elif numOfDays(Tdap_date, today)>=(365*10):
         print("it has been 10 years since your last tdap dose, discuss with physician.")
     else:
-        print("up to date on flu vax.")
+        print("up to date on tdap vax.")
         
 
 # PNEUM COMPLETE
