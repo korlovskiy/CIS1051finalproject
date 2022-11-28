@@ -1,0 +1,196 @@
+body, p, h2, h1, a{
+    font-family: Georgia, serif;
+
+}
+
+
+.picture{
+    align-content: center;
+
+}
+
+img{
+    width: 400px;
+    height: 400px;
+    margin: auto;
+    display: block;
+
+}
+
+.style_virus{
+    box-shadow: 2px 2px 2px 1px green;
+    padding: 20px;
+    color: green;
+}
+
+.umbrella{
+    box-shadow: 3px 3px 4px 3px black;
+}
+
+a:hover{
+    cursor: pointer;
+}
+
+#vaccine
+{
+    width: 400px; 
+    height: 400px;
+    margin: auto;
+    display: block;
+
+}
+
+.Textbox {
+    border: 5px outset white;
+    height: 400px;
+
+    background: rgb(169, 217, 239);
+    text-align: center;
+
+}
+
+
+
+.title 
+{
+    text-align: center; 
+    text-shadow:2px 2px 4px white;
+
+}
+
+.color 
+{
+    color: black;
+    text-align: center;
+}
+
+.colorBackground 
+{
+    box-shadow: 3px 3px 4px 3px darkblue;
+
+margin: 0;
+opacity: .7;
+
+}
+
+
+
+.colorBackground h2{
+    text-decoration: underline;
+}
+
+
+.firstTitle
+{
+    text-align: center;
+    color: purple;
+    font-family: sans-serif;
+}
+
+.font 
+{
+    font-family: 'Times New Roman', Times, serif;
+
+}
+
+
+{
+    margin: 0; 
+    padding-top: 0; 
+    
+}
+
+nav {
+    width:100%;
+    height: 82px;
+    background-color: rgb(255, 246, 2);
+    opacity: .7;
+border: double;
+border-width:  10px;
+
+
+}
+
+nav p {
+    font-family: arial; 
+    color:blue;
+    font-size:20px;
+    line-height:55px;
+    float: left; 
+    padding: 0px 20px;
+
+}
+
+nav ul {
+    float: left; 
+}
+
+nav ul li {
+    float:left; 
+    list-style: none; 
+    position: relative; 
+
+}
+
+
+nav ul li ul{
+    display: none;
+    position: absolute; 
+    background-color: white;
+    padding: 10px; 
+    border-radius: 0px 0px 4px 4px;
+
+
+}
+
+nav ul li:hover ul{
+    display: block;
+}
+
+
+nav ul li a{
+    display: block;
+    font-family: arial; 
+    color:black;
+    font-size:14;
+    padding: 24px 14px;
+    text-decoration: none;
+
+
+}
+
+#winter{
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    z-index: -1;
+    opacity: .7;
+}
+nav ul li ul li a{
+    width: 180px;
+    border-radius: 4px;
+
+}
+
+
+
+
+nav ul li ul li a{
+    padding: 8 px 14px;
+
+}
+
+
+
+nav a:hover{
+    background-color: darkblue; 
+    padding: 20 px 14px;
+    color: white;
+}
+
+
+
+
+
