@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+
+    <header>
+        <title>
+        </title>
+        <style> 
+
+
+        </style>
+    </header>
+    <body style= "background-color:#FFF1E6; text-align: center;">
+        <h1 class="title">  </h1>
+
+
+
+
+            <img src=".png" alt="Our Logo :)">  
+                <style width:10;
+                height:10; > 
+    
+                </style>
+    
+
+                <hr style="border: 1px dashed rgb(198, 193, 193);" />
+
+            <div class="colorBackground">
+
+
+        <h2 class="title"> About the virus: </h2> 
+
+
+        <p class="color" > 
+
+        </p>
+        <hr style="border: 1px dashed rgb(198, 193, 193);" />
+
+
+        <h2 class="title"> Ways to contract the virus: </h2> 
+
+
+    <p class="color" > </p>
+
+    </div>
+
+
+
+
+
+
+    <hr style="border: 1px dashed rgb(198, 193, 193);" />
+    
+
+
+    <div class="colorBackground">
+        <h2 class="title"> Viral symptoms: </h2>
+        <p class="color">  </p>
+
+        <p class="color">  </p>
+    
+
+        <p class="color"> . </p>
+    
+
+
+         <p class="color"></p>
+
+<p class="color">
+</p>
+
+<p class="color">
+ </p>
+
+                
+
+
+        <hr style="border: 1px dashed rgb(198, 193, 193);" />
+
+        <h2 class="title"> Additional Information: </h2>
+        <p class="color"> - 
+        </p>
+
+
+    </div>
+
+    <div class="colorBackground">
+
+    <p class="color"> ** Data retrieved directly from www.cdc.gov., www.nfid.org, and www.who.int**</p>
+    <a href="../page2.html">Back</a> 
+
+    </div>
+
+    </body>
+</html>
