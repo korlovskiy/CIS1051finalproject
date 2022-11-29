@@ -568,11 +568,11 @@ elif len(position_COVID) == 0:
 
 if age(filename) >= 19:
     if most_recent_COVID_dose == 0:
-        print ("The CDC recommends 2 doses of the Covid-19 Pfizer vaccine, or 2 doses of the Covid-19 Moderna vaccine to be considered fully vaccinated. Please consult with a physician or a pharmacist to discuss options for getting the Covid-19 vaccine.")
+        print ("The CDC recommends 2 doses of the Covid-19 Pfizer vaccine, or 2 doses of the COVID-19 Moderna vaccine to be considered fully vaccinated. Please consult with a physician or a pharmacist to discuss options for getting the Covid-19 vaccine.")
     elif most_recent_COVID_dose == 1:
-        print("The CDC recommends 2 doses of the Covid-19 Pfizer vaccine, or 2 doses of the Covid-19 Moderna vaccine to be considered fully vaccinated. Please consult with a physician or a pharmacist to discuss options for completing your inital Covid-19 vaccination.")
+        print("The CDC recommends 2 doses of the Covid-19 Pfizer vaccine, or 2 doses of the COVID-19 Moderna vaccine to be considered fully vaccinated. Please consult with a physician or a pharmacist to discuss options for completing your inital Covid-19 vaccination.")
     elif most_recent_COVID_dose >=2:
-        print("You are considered fully vaccinated against Covid-19, however, you may want to consider a booster vaccination dose if more than 2 months has passed since your last Covid-19 vaccination. Please consult with a physician or a pharmacist to discuss booster options.")
+        print("You are considered fully vaccinated against COVID-19, however, you may want to consider a booster dose if more than 2 months has passed since your last COVID-19 vaccination. Please consult with a physician or a pharmacist to discuss booster options.")
         
 
         
