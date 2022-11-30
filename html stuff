@@ -1,0 +1,124 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+        <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+        <py-env>
+            - tabula-py
+            - PyPDF2
+            
+            - paths:
+                - cleanup.py
+                - immrecord.csv
+                - immrecord.pdf
+            
+
+            
+            
+            
+        </py-env>
+
+    </head>
+    <body>
+        <div id= "plot"></div>
+        
+        
+        <py-script output="plot">
+            from datetime import date
+            
+            from cleanup import age
+            from cleanup import numOfDays
+            
+            filename = "immrecord"
+
+            today = date.today()
+            
+
+            print(age(filename))
+
+            file = open(filename + ".csv", "r")
+            resultsfile = open("results.txt", "w")
+
+            vaccine_name = []
+
+            vaccine_dose = []
+
+            vaccine_date = []
+
+            vaccine_dose_hepA = []
+            vaccine_dose_hepB = []
+            vaccine_dose_Hib = []
+            vaccine_date_Tdap = []
+            for line in file.readlines():
+                field = line.split(",")
+                vaccine_name.append(field[0])
+                vaccine_dose.append(field[1])
+                vaccine_date.append(field[2])
+                vaccine_dose_hepA.append(field[3])
+                vaccine_dose_hepB.append(field[2])
+                vaccine_dose_Hib.append(field[2])
+                vaccine_date_Tdap.append(field[3])
+                
+            resultsfile.write( "Influenza\n")
+            resultsfile.write(" \n")
+
+            position_flu = []
+            index = -1
+            for item in vaccine_name:
+                index += 1
+                # print(item,index)
+                if "flu" in item:
+                 position_flu.append(index)
+
+            if len(position_flu) >= 1:
+                max_flu = max(position_flu)
+
+                most_recent_flu_date = vaccine_date[max_flu]
+                # print(most_recent_flu_date)
+
+                flu_date_fields = most_recent_flu_date.split("/")
+
+                # print(flu_date_fields)
+
+                new_int_list_flu = []
+
+                for num in flu_date_fields:
+                    num = int(num)
+                    new_int_list_flu.append(num)
+
+                # print(new_int_list_flu)
+
+                flu_year = new_int_list_flu[2]
+                flu_month = new_int_list_flu[0]
+                flu_day = new_int_list_flu[1]
+
+                flu_date = date(flu_year, flu_month, flu_day)
+                # print(flu_date)
+            else:
+                flu_date = 0
+
+            if age(filename) >= 19:
+                if "Influenza" not in vaccine_name or flu_date == 0:  # we should go off the vax name used in the headers
+                    print("get flu vaccine. \n")
+                elif numOfDays(flu_date, today) >= 365:
+                    print("get flu vaccine. \n")
+                else:
+                    print("up to date on flu vax.\n")
+                
+
+                
+
+            
+            
+            
+        
+
+
+
+            
+            
+
+        
+        </py-script>
+
+    </body>
+</html>
