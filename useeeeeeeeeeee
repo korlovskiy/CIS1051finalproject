@@ -353,3 +353,239 @@ if len(position_Hib) >=1:
     most_recent_Hib_dose = int(vaccine_dose[max_Hib])
 elif len(position_Hib) == 0:
     most_recent_Hib_dose = 0
+
+
+if age(filename) >= 19:
+    if ("Hib" not in vaccine_name) or most_recent_Hib_dose < 3:
+        resultsfile.write("For adults 19 and older, the  CDC recommends 1 or 3 doses depending on indication. Please consult with your physician to determine if you are eligible to receive the Hib vaccine and how many doses you need.\n")
+    elif most_recent_Hib_dose == 3:
+        resultsfile.write("You are fully vaccinated with the Hib vaccine.\n")
+
+resultsfile.write(" \n")
+resultsfile.write("Human papillomavirus\n")
+resultsfile.write(" \n")
+
+position_HPV = []
+index_1 = -1
+for item in vaccine_name:
+    index_1 += 1
+    # print(item,index)
+    if "HPV" in item:
+        position_HPV.append(index_1)
+
+if len(position_HPV) >=1:
+
+    max_HPV = max(position_HPV)
+
+    most_recent_HPV_dose = vaccine_dose[max_HPV]
+    most_recent_HPV_dose = int(most_recent_HPV_dose)
+elif len(position_HPV) == 0:
+    most_recent_HPV_dose = 0
+
+
+
+# Human papillomavirus (HPV)
+if 19 <= age(filename) < 27:
+    if "HPV" not in vaccine_name:
+        resultsfile.write("It is recommended for adults in your age range to get 2-3 doses of the HPV vaccine. Please consult with physician.\n")
+    elif most_recent_HPV_dose == 1 or most_recent_HPV_dose == 2:
+        resultsfile.write("It is recommended for adults in your age range to get 2-3 doses of the HPV vaccine. If you have 2, you may need a 3rd. Please consult with your physician.\n")
+    elif most_recent_HPV_dose == 3:
+        resultsfile.write("You are fully vaccinated against HPV.\n")
+
+elif 27 <= age(filename) == 45:
+    if most_recent_HPV_dose == 0:
+        resultsfile.write("You may be eligible to get vaccinated against HPV, please consult with a physician.\n")
+    elif most_recent_HPV_dose == 1 or most_recent_HPV_dose == 2:
+        resultsfile.write("You may be fully vaccinated against HPV, please consult with your physician to determine if any more vaccines are needed.\n")
+    elif most_recent_HPV_dose == 3:
+        resultsfile.write("You are fully vaccinated against HPV.\n")
+
+
+
+resultsfile.write(" \n")
+resultsfile.write("Zoster recombinant \n")
+resultsfile.write(" \n")
+position_rzv = []
+index_2 = -1
+for item in vaccine_name:
+    index_2 += 1
+    # print(item,index)
+    if "zos" in item:
+        position_rzv.append(index_2)
+if len(position_rzv) >=1:
+
+    max_rzv = max(position_rzv)
+
+    most_recent_rzv_dose = vaccine_dose[max_rzv]
+    most_recent_rzv_dose = int(most_recent_rzv_dose)
+elif len(position_rzv) == 0:
+    most_recent_rzv_dose = 0
+
+
+
+# Zoster recombinant (RZV)
+if age(filename) >= 50:
+    if most_recent_rzv_dose == 0:
+        resultsfile.write("2 doses of RZV is recommended for adults 50 and older. Please consult with your physician.\n")
+    elif most_recent_rzv_dose == 1:
+        resultsfile.write("1 more dose recommended to be fully vaccinated.\n")
+    elif most_recent_rzv_dose == 2:
+        resultsfile.write("Up to date.\n")
+if age(filename)<50:
+    if most_recent_rzv_dose == 0:
+        resultsfile.write("This vaccine is recommended for adults under 50 if they have an immunocompromising condition. If you believe this may apply to you, please consult with your physician.\n")
+
+
+resultsfile.write(" \n")
+resultsfile.write("Varicella \n")
+resultsfile.write(" \n")
+position_var = []
+index_2 = -1
+for item in vaccine_name:
+    index_2 += 1
+    # print(item,index)
+    if "cella" in item:
+        position_var.append(index_2)
+if len(position_var) >=1:
+
+    max_var = max(position_var)
+
+    most_recent_var_dose = vaccine_dose[max_var]
+    most_recent_var_dose = int(most_recent_var_dose)
+elif len(position_var) == 0:
+    most_recent_var_dose = 0
+
+
+if age(filename)<50:
+    if most_recent_var_dose == 0:
+        resultsfile.write("Get varicella vaccine \n")
+    elif most_recent_var_dose ==1:
+        resultsfile.write("Records indicate you currently have 1 dose of the varicella vaccine. To be considered fully vaccinated, you must have 2 doses. Please consult with physician. \n")
+    elif most_recent_var_dose == 2:
+        resultsfile.write("you are fully vaccinated against varicella. \n")
+if age(filename)>=50:
+    if most_recent_var_dose == 0 or most_recent_var_dose ==1:
+        resultsfile.write("2 doses of this vaccine are recommended for adults over 50 who have additional risk factors or other indications. Please consult with your physician to see if you are eligible. \n")
+
+
+resultsfile.write(" \n")
+resultsfile.write("Measles, Mumps, Rubella \n")
+resultsfile.write(" \n")
+position_mmr = []
+index_2 = -1
+for item in vaccine_name:
+    index_2 += 1
+    # print(item,index)
+    if "MMR" in item:
+        position_mmr.append(index_2)
+if len(position_mmr) >=1:
+
+    max_mmr = max(position_mmr)
+
+    most_recent_mmr_dose = vaccine_dose[max_mmr]
+    most_recent_mmr_dose = int(most_recent_mmr_dose)
+elif len(position_mmr) == 0:
+    most_recent_mmr_dose = 0
+
+
+
+#measles, mumps, rubella (MMR) (not dependent on time frame, just dependent on number of doses)
+if age(filename) < 65:
+    if most_recent_mmr_dose == 0:
+        resultsfile.write("get MMR. \n")
+    elif most_recent_mmr_dose==1:
+        resultsfile.write("You are considered fully vaccinated with the MMR vaccine, but may need a second dose depending on your indication. Please consult with a physician.\n")
+    elif most_recent_mmr_dose == 2:
+        resultsfile.write("You are fully vaccinated against MMR. \n")
+
+
+resultsfile.write(" \n")
+resultsfile.write("Tetanus \n")
+resultsfile.write("  \n")
+#Tdap COMPLETE
+position_Tdap = []
+Tdap_index = -1
+
+for item in vaccine_name:
+    Tdap_index += 1
+
+    # print(item,index)
+    if "dap" in item:
+
+        position_Tdap.append(Tdap_index)
+
+if len(position_Tdap) >=1:
+    max_Tdap = max(position_Tdap)
+
+
+    most_recent_Tdap_date = vaccine_date_Tdap[max_Tdap]
+
+
+    Tdap_date_fields = most_recent_Tdap_date.split("/")
+
+
+
+    new_int_list_Tdap= []
+
+    for num in Tdap_date_fields:
+        num = int(num)
+        new_int_list_Tdap.append(num)
+
+
+
+
+    Tdap_year = new_int_list_Tdap[2]
+    Tdap_month = new_int_list_Tdap[0]
+    Tdap_day = new_int_list_Tdap[1]
+
+    Tdap_date = date(Tdap_year, Tdap_month, Tdap_day)
+
+else:
+    Tdap_date = 0
+
+
+
+
+
+
+#Tdap (tetanus) – 1 dose initially, then one every 10 years
+if age(filename)>= 19:
+    if Tdap_date == 0:
+        resultsfile.write("get tdap vaccine.\n")
+    elif numOfDays(Tdap_date, today)>=(365*10):
+        resultsfile.write("it has been 10 years since your last tdap dose, discuss with physician. \n")
+    else:
+        resultsfile.write("up to date on flu vax. \n")
+
+
+resultsfile.write(" \n")
+resultsfile.write("COVID-19 \n")
+resultsfile.write(" \n")
+# COVID-19 - amount of doses
+
+position_COVID = []
+index_2 = -1
+for item in vaccine_name:
+    index_2 += 1
+    # print(item,index)
+    if "COVID" in item:
+        position_COVID.append(index_2)
+if len(position_COVID) >=1:
+
+    max_COVID = max(position_COVID)
+
+    most_recent_COVID_dose = vaccine_dose[max_COVID]
+    most_recent_COVID_dose = int(most_recent_COVID_dose)
+elif len(position_COVID) == 0:
+    most_recent_COVID_dose = 0
+
+if age(filename) >= 19:
+    if most_recent_COVID_dose == 0:
+        resultsfile.write( "The CDC recommends 2 doses of the Covid-19 Pfizer vaccine, or 2 doses of the COVID-19 Moderna vaccine to be considered fully vaccinated. Please consult with a physician or a pharmacist to discuss options for getting the Covid-19 vaccine. \n")
+    elif most_recent_COVID_dose == 1:
+        resultsfile.write("The CDC recommends 2 doses of the Covid-19 Pfizer vaccine, or 2 doses of the COVID-19 Moderna vaccine to be considered fully vaccinated. Please consult with a physician or a pharmacist to discuss options for completing your inital Covid-19 vaccination. \n")
+    elif most_recent_COVID_dose >= 2:
+        resultsfile.write("You are considered fully vaccinated against COVID-19, however, you may want to consider a booster dose if more than 2 months has passed since your last COVID-19 vaccination. Please consult with a physician or a pharmacist to discuss booster options. \n")
+
+resultsfile.close()
