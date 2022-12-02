@@ -1,0 +1,33 @@
+import tabula as tb
+
+file = "immu.pdf"
+
+table = tb.read_pdf(file, pages="all")
+csv = file + ".csv"
+
+csv_file = tb.convert_into(file, csv, pages="all")
+
+kj_record = open("immu.csv", "r")
+
+lines = kj_record.readlines()
+
+new_lines = ""
+
+for line in lines:
+    if line[0:15] =='"",,,,,Dose Due':
+        new_lines +=""
+    elif line[0:8] =='"",,,,,,':
+        new_lines += ""
+    elif line[0:3] == '"",':
+        new_lines += line[3:]
+    elif line[0:9] =='Dose Due"':
+        new_lines +=""
+
+
+    else:
+        new_lines += line
+
+
+resultsfile = open("results_cool.txt", "w")
+
+resultsfile.write(new_lines)
