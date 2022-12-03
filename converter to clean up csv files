@@ -1,0 +1,70 @@
+import tabula as tb
+
+file = "immrecord.pdf"
+
+table = tb.read_pdf(file, pages="all")
+csv = file + ".csv"
+
+csv_file = tb.convert_into(file, csv, pages="all")
+
+record = open("immrecord.pdf.csv", "r")
+
+lines = record.readlines()
+
+
+#print(lines)
+
+new_lines = ""
+
+for line in lines:
+    if line[0:15] =='"",,,,,Dose Due':
+        new_lines +=""
+    elif line[0:14] =='"",,,,Dose Due':
+        new_lines +=""
+    elif line[0:8] =='"",,,,,,':
+        new_lines += ""
+    elif line[0:3] == '"",':
+        new_lines += line[3:]
+    elif line[0:9] =='Dose Due"':
+        new_lines +=""
+    else:
+        new_lines += line
+#print(new_lines)
+
+
+f = open("converted.txt", "w")
+f.write(new_lines)
+f.close()
+
+f = open("converted.txt", "r")
+
+newest_lines = f.readlines()
+#print(newest_lines)
+
+strr=""
+
+for line in newest_lines:
+    if line[-3:-1]==",,":
+        #print(line[-3:-1])
+        #print(line[0:-3])
+        strr = strr + line[0:-3]+"\n"
+        #print(strr)
+    elif line[-2:-1]==",":
+        strr = strr + line[0:-2]+"\n"
+    else:
+        strr += line+"\n"
+  
+s = open("convertedfinal.txt", "w")
+s.write(new_lines)
+s.close()
+
+import pandas
+
+import csv
+vaxlist = pandas.read_csv("convertedfinal.txt",on_bad_lines='skip', quoting=csv.QUOTE_NONE)
+
+vaxlist.to_csv("convertedfinal.csv", index = None)
+
+f = open("convertedfinal.csv", "r")
+print(f.read())
+
