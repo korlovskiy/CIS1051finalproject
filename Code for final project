@@ -75,7 +75,7 @@ def age(filename):
         daystr = daystr + i
     for i in year:
         yearstr = yearstr + i
-   
+
     intmonth = int(monthstr)
     intday = int(daystr)
     intyear = int(yearstr)
@@ -101,8 +101,8 @@ def appropriate_age(file):
 if appropriate_age(filename) == True:
 
     file = open(filename + ".csv", "r")
-    results_file = open("Recommendation.txt", "w")
-    
+    results_file = open("recommendation.txt", "w")
+
     # Reads the file and appends the fields to lists
 
     vaccine_name = []
@@ -546,13 +546,13 @@ if appropriate_age(filename) == True:
         elif most_recent_COVID_dose >= 2:
             results_file.write("You are considered fully vaccinated against COVID-19, however, you may want to consider a booster dose if more than 2 months has passed since your last COVID-19 vaccination. Please consult with a physician or a pharmacist to discuss booster options.\n")
 
-    results_file.close()
+
 
 # If the patient is 18 or younger, then the file will write to the user in how many years needed to use the file
 else:
-    
+
     results_file = open("Recommendation.txt", "w")
     results_file.write("You need to be 19 and up to use this code: ")
     results_file.write("Come back in " + str(19 - age(filename)) + " year(s).")
 
-    results_file.close()
+results_file.close()
