@@ -101,7 +101,7 @@ def appropriate_age(file):
 if appropriate_age(filename) == True:
 
     file = open(filename + ".csv", "r")
-    results_file = open("recommendation.txt", "w")
+    results_file = open("Finalrecommendations.txt", "w")
 
     # Reads the file and appends the fields to lists
 
@@ -168,9 +168,9 @@ if appropriate_age(filename) == True:
     # nested if statement that writes the proper string based on the outcome of the flu_date
     if age(filename) >= 19:
         if "Influenza" not in vaccine_name or flu_date == 0:  # we should go off the vax name used in the headers
-            results_file.write("The CDC recommends that adults get 1 dose of the flu vaccine anually. Please consult with your physician or local pharmacy to schedule your flu dose.\n")
+            results_file.write("The CDC recommends that adults get 1 dose of the flu vaccine annually. Please consult with your physician or local pharmacy to schedule your flu dose.\n")
         elif numOfDays(flu_date, today) >= 365:
-            results_file.write("The CDC recommends that adults get 1 dose of the flu vaccine anually. Please consult with your physician or local pharmacy to schedule your flu dose.\n")
+            results_file.write("The CDC recommends that adults get 1 dose of the flu vaccine annually. Please consult with your physician or local pharmacy to schedule your flu dose.\n")
         else:
             results_file.write("You are up to date on you flu vaccination.\n")
     # Same theory applies to the rest
@@ -321,7 +321,7 @@ if appropriate_age(filename) == True:
 
     # Haemophilus influenzae type b (Hib) COMPLETE
     results_file.write(" \n")
-    results_file.write("Haemophiliacs influenza\n")
+    results_file.write("Haemophilus influenzae type b (Hib)\n")
     results_file.write(" \n")
 
     position_Hib = []
@@ -346,7 +346,7 @@ if appropriate_age(filename) == True:
             results_file.write("You are fully vaccinated with the Hib vaccine.\n")
 
     results_file.write(" \n")
-    results_file.write("Human papillomavirus\n")
+    results_file.write("Human papillomavirus (HPV)\n")
     results_file.write(" \n")
 
     position_HPV = []
@@ -412,7 +412,7 @@ if appropriate_age(filename) == True:
             results_file.write("You are fullu vaccinated with the RZV vaccine.\n")
     if age(filename) < 50:
         if most_recent_rzv_dose == 0:
-            results_file.write("This vaccine is recommended for adults under 50 if they have an immunocompromising condition. If you believe this may apply to you, please consult with your physician to discuss eligibility.\n")
+            results_file.write("This vaccine is recommended for adults under 50 if they are immunocompromised. If you believe this may apply to you, please consult with your physician to discuss eligibility.\n")
 
     results_file.write(" \n")
     results_file.write("Varicella\n")
@@ -466,14 +466,14 @@ if appropriate_age(filename) == True:
     # measles, mumps, rubella (MMR) (not dependent on time frame, just dependent on number of doses)
     if age(filename) < 65:
         if most_recent_mmr_dose == 0:
-            results_file.write("1 to 2 doses of the MMR vaccine are needed to be considered fully vaccined. Records indicate you have not received an MMR vaccine. Please consult with your physician to discuss vaccination.\n")
+            results_file.write("1 to 2 doses of the MMR vaccine are needed to be considered fully vaccinated. Records indicate you have not received an MMR vaccine. Please consult with your physician to discuss vaccination.\n")
         elif most_recent_mmr_dose == 1:
             results_file.write("You are considered fully vaccinated with the MMR vaccine, but may need a second dose depending on your indication. Please consult with a physician.\n")
         elif most_recent_mmr_dose == 2:
             results_file.write("You are fully vaccinated with the MMR vaccine.\n")
 
     results_file.write(" \n")
-    results_file.write("Tetanus\n")
+    results_file.write("Tetanus (Tdap)\n")
     results_file.write(" \n")
     # Tdap COMPLETE
     position_Tdap = []
