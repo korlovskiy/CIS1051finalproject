@@ -1,0 +1,558 @@
+import PyPDF2
+import tabula as tb
+
+
+
+from datetime import date
+
+# var that has today's date
+today = date.today()
+
+
+# Uses the name of the file to turn the PDF file into a CSV file
+
+filename = "immrecord"
+file = filename + ".pdf"
+table = tb.read_pdf(file, pages='all')
+file2 = filename + ".csv"
+csv_table = tb.convert_into(file, file2, pages="all")
+
+
+# function that returns the amount of days between two dates
+def numOfDays(date1, date2):
+    return (date2 - date1).days
+
+# function that uses the PDF read to get the age of the patient
+def age(filename):
+    file = filename + ".pdf"
+
+    pdfFileObject = open(file, 'rb')
+
+    pdfReader = PyPDF2.PdfFileReader(pdfFileObject)
+
+    pageObject = pdfReader.getPage(0)
+
+    text = pageObject.extractText()
+    # List to get the month, date, and year
+    month1 = []
+    day1 = []
+    year1 = []
+    # Splits the PDF file to only get the line with the patient's birth year
+    for line in text.splitlines()[4:5]:
+        field = line.split("/")
+        month1.append(field[0])
+        day1.append(field[1])
+        year1.append(field[2])
+
+    # Uses the list to append the string with the numbers from 1-12 only
+    month = []
+
+    for i in month1:
+        for x in i:
+            if x in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]:
+                month.append(x)
+
+    day = []
+
+    for i in day1:
+        for x in i:
+            if x in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]:
+                day.append(x)
+    year = []
+    for i in year1:
+        for x in i:
+            if x in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]:
+                year.append(x)
+    # patient ID number is also on this line, but the patient's birthdate is first. So, only uses the first 4 numbers
+    year = year[0:4]
+    # From the list, adds the numbers to the strings, and then makes those numbers into int
+    monthstr = ""
+    daystr = ""
+    yearstr = ""
+    for i in month:
+        monthstr = monthstr + i
+    for i in day:
+        daystr = daystr + i
+    for i in year:
+        yearstr = yearstr + i
+
+    intmonth = int(monthstr)
+    intday = int(daystr)
+    intyear = int(yearstr)
+    # The patient date is put into the proper format, and the today's date is also formatted correctly
+    date1 = date(intyear, intmonth, intday)
+    date2 = today
+    # Uses numofDays function to get the amount of days between the two, divides by 366 (counting leap years), and
+    # returns the user_age
+    day = numOfDays(date1, date2)
+
+    user_age = int(day / 366)
+    return user_age
+
+# Function from the file, uses the age function to see if the patient is greater than 19,
+def appropriate_age(file):
+    user_age = age(file)
+    if user_age >= 19:
+        return True
+    else:
+        return False
+
+# if statment that determines the patient is 19 and up, starts to read the file for vaccines and writes into a file
+if appropriate_age(filename) == True:
+
+    file = open(filename + ".csv", "r")
+    results_file = open("Finalrecommendations.txt", "w")
+
+    # Reads the file and appends the fields to lists
+
+    vaccine_name = []
+
+    vaccine_dose = []
+
+    vaccine_date = []
+
+    vaccine_dose_hepA = []
+    vaccine_dose_hepB = []
+    vaccine_dose_Hib = []
+    vaccine_date_Tdap = []
+    for line in file.readlines():
+        field = line.split(",")
+        vaccine_name.append(field[0])
+        vaccine_dose.append(field[1])
+        vaccine_date.append(field[2])
+        vaccine_dose_hepA.append(field[3])
+        vaccine_dose_hepB.append(field[2])
+        vaccine_dose_Hib.append(field[2])
+        vaccine_date_Tdap.append(field[3])
+
+    # Flu - 1 dose anually (COMPLETE)
+    results_file.write("\n")
+    results_file.write("Influenza\n")
+    results_file.write("\n")
+    position_flu = []
+    index = -1
+    # For loop that if flue is  in the vaccine name, then appends that index to the position list
+    for item in vaccine_name:
+        index += 1
+        # print(item,index)
+        if "flu" in item:
+            position_flu.append(index)
+    # if the list has any numbers, it will retrieve the max index, and use it to find the vaccine date
+    if len(position_flu) >= 1:
+        max_flu = max(position_flu)
+
+        most_recent_flu_date = vaccine_date[max_flu]
+        # print(most_recent_flu_date)
+
+        flu_date_fields = most_recent_flu_date.split("/")
+
+        # print(flu_date_fields)
+
+        new_int_list_flu = []
+
+        for num in flu_date_fields:
+            num = int(num)
+            new_int_list_flu.append(num)
+
+        # print(new_int_list_flu)
+
+        flu_year = new_int_list_flu[2]
+        flu_month = new_int_list_flu[0]
+        flu_day = new_int_list_flu[1]
+
+        flu_date = date(flu_year, flu_month, flu_day)
+        # print(flu_date)
+        # If there is no flu, then the flue_date is just 0
+    else:
+        flu_date = 0
+    # nested if statement that writes the proper string based on the outcome of the flu_date
+    if age(filename) >= 19:
+        if "Influenza" not in vaccine_name or flu_date == 0:  # we should go off the vax name used in the headers
+            results_file.write("The CDC recommends that adults get 1 dose of the flu vaccine annually. Please consult with your physician or local pharmacy to schedule your flu dose.\n")
+        elif numOfDays(flu_date, today) >= 365:
+            results_file.write("The CDC recommends that adults get 1 dose of the flu vaccine annually. Please consult with your physician or local pharmacy to schedule your flu dose.\n")
+        else:
+            results_file.write("You are up to date on you flu vaccination.\n")
+    # Same theory applies to the rest
+    # PNEUM COMPLETE
+    results_file.write(" \n")
+    results_file.write("Pneumococcal\n")
+    results_file.write(" \n")
+    position_pneum = []
+    pneum_index = -1
+    for item in vaccine_name:
+        pneum_index += 1
+        # print(item,index)
+        if "PCV" or "PPSV" in item:
+            position_pneum.append(pneum_index)
+
+    if len(position_pneum) >= 1:
+
+        max_pneum = max(position_pneum)
+
+        most_recent_pneum_dose = vaccine_dose[max_pneum]
+        most_recent_pneum_dose = int(most_recent_pneum_dose)
+    elif len(position_pneum) == 0:
+        most_recent_penum_dose = 0
+
+    # Pneumococcal (PCV15, PCV20, PPSV23) COMPLETE (just make sure age function works correctly)
+    if age(filename) >= 65:
+        if "Pneumococcal" not in vaccine_name:
+            results_file.write("Adults 65 and up require two doses of the pneumococcal vaccine. Please consult with your physician to discuss your pneumococcal vaccination.\n")
+        elif most_recent_pneum_dose == 1:
+            results_file.write( "Adults 65 and up require two doses of the pneumococcal vaccine. Please consult with your physician to discuss your pneumococcal vaccination.\n")
+        elif most_recent_pneum_dose == 2:
+            results_file.write("You are fully vaccinated with the pneumococcal vaccine.\n")
+
+    elif 19 <= age(filename) < 65:
+        if "Pneumococcal" not in vaccine_name:
+            results_file.write("Adults between the ages of 19 and 64 may qualify to receive the pneumococcal vaccine based on medical conditions or other risk factors. Please consult with your physician to determine eligibility.\n")
+
+    # Hepatitis A (HepA) COMPLETE
+    results_file.write(" \n")
+    results_file.write("Hepatitis A\n")
+    results_file.write(" \n")
+    position_hepA = []
+    hepA_index = -1
+    for item in vaccine_name:
+        hepA_index += 1
+        # print(item,index)
+        if "Hep A" in item:
+            position_hepA.append(hepA_index)
+    if len(position_hepA) >= 1:
+
+        max_hepA = max(position_hepA)
+
+        most_recent_hepA_dose = vaccine_dose_hepA[max_hepA]
+        most_recent_hepA_dose = int(most_recent_hepA_dose)
+    elif len(position_hepA) == 0:
+        most_recent_hepA_dose = 0
+
+    if age(filename) >= 19:
+        if ("Hep A" not in vaccine_name) or most_recent_hepA_dose == 1:
+            results_file.write("It is recommended that adults have 2 or 3 doses of the HepA vaccine depending on the vaccine type. You may be eligible to receive this vaccine based on risk factors or other indiciations. Please consult with your physician.\n")
+        elif most_recent_hepA_dose == 2:
+            results_file.write("It is recommended that adults have 2 or 3 doses of the HepA vaccine depending on vaccine type and indication. You currently have 2 doses, but may need a third. Please consult with your physician.\n")
+        elif most_recent_hepA_dose == 3:
+            results_file.write("You are fully vaccinated with the Hepatitis A vaccine.\n")
+
+    # Hepatitis B (HepB) COMPLETE
+    results_file.write(" \n")
+    results_file.write("Hepatitis B\n")
+    results_file.write(" \n")
+
+    position_hepB = []
+    hepB_index = -1
+
+    for item in vaccine_name:
+        hepB_index += 1
+
+        # print(item,index)
+        if "Hep B" and "HepB" in item:
+            position_hepB.append(item)
+    if len(position_hepB) >= 1:
+
+        max_hepB = max(position_hepB)
+
+        most_recent_hepB_dose = vaccine_dose_hepB[max_hepB]
+        most_recent_hepB_dose = int(most_recent_hepB_dose)
+    elif len(position_hepB) == 0:
+        most_recent_hepB_dose = 0
+
+    if 19 <= age(filename) < 60:
+        if ("Hep B" not in vaccine_name) or most_recent_hepB_dose == 1 or most_recent_hepB_dose == 2 or most_recent_hepB_dose == 3:
+            results_file.write("The CDC recommends 2,3, or 4 doses of the HepB vaccine for adults under the age of 60 depending on vaccine or condition. Please consult with your physician to determine how many more doses you need to be considered fully vaccinated.\n")
+        elif most_recent_hepB_dose == 4:
+            results_file.write("You are fully vaccinated with the HepB vaccine.\n")
+
+    if age(filename) >= 60:
+        results_file.write("The CDC recommends the HepB vaccine for adults over 60 depending on the patient indication and the vaccine. Please consult with your physician to determine if you are eligible for the HepB vaccine and how many doses you need to be considered fully vaccinated.\n")
+
+    # Meningococcal A, C, W, Y (MCV4) COMPLETE
+
+    results_file.write(" \n")
+    results_file.write("Meningococcal A,C,W,Y\n")
+    results_file.write(" \n")
+    position_MCV4 = []
+    MCV4_index = -1
+    for item in vaccine_name:
+        MCV4_index += 1
+        # print(item,index)
+        if "MCV4" in item:
+            position_MCV4.append(MCV4_index)
+    if len(position_MCV4) >= 1:
+
+        max_MCV4 = max(position_MCV4)
+
+        most_recent_MCV4_dose = vaccine_dose[max_MCV4]
+        most_recent_MCV4_dose = int(most_recent_MCV4_dose)
+    elif len(position_MCV4) == 0:
+        most_recent_MCV4_dose = 0
+
+    if age(filename) >= 19:
+        if most_recent_MCV4_dose == 2:
+            results_file.write("You are fully vaccinated with the Meningococcal ACWY vaccine.\n")
+        elif ("Meningococcal" not in vaccine_name) or most_recent_MCV4_dose == 1:
+            results_file.write("For adults 19 and older, the  CDC recommends 1 or 2 doses of the Meningococcal ACWY vaccine depending on indication. Please consult with your physician to determine if you are eligible to receive the Meningococcal ACWY vaccine.\n")
+
+    # Meningococcal B (MenB) COMPLETE
+    results_file.write(" \n")
+    results_file.write("Meningococcal B\n")
+    results_file.write(" \n")
+    position_MenB = []
+    MenB_index = -1
+    for item in vaccine_name:
+        MenB_index += 1
+        # print(item,index)
+        if "Meningococcal B" in item:
+            position_MenB(MenB_index)
+    if len(position_MenB) >= 1:
+        max_MenB = max(position_MenB)
+
+        most_recent_MenB_dose = int(vaccine_dose[max_MenB])
+    elif len(position_MenB) == 0:
+        most_recent_MenB_dose = 0
+
+    if age(filename) >= 19:
+        if ("Meningococcal B" not in vaccine_name) or most_recent_MenB_dose == 1 or most_recent_MenB_dose == 2:
+            results_file.write("For adults 19 and older, the  CDC recommends 2 or 3 doses of the Meningococcal B vaccine depending on indication. Please consult with your physician to determine if you are eligible to receive the MenB vaccine.\n")
+        elif most_recent_MenB_dose == 3:
+            results_file.write("You are fully vaccinated with the Meningococcal B vaccine.\n")
+
+    # Haemophilus influenzae type b (Hib) COMPLETE
+    results_file.write(" \n")
+    results_file.write("Haemophilus influenzae type b (Hib)\n")
+    results_file.write(" \n")
+
+    position_Hib = []
+    Hib_index = -1
+    for item in vaccine_name:
+        Hib_index += 1
+        # print(item,index)
+        if "Hib" in item:
+            position_Hib.append(Hib_index)
+
+    if len(position_Hib) >= 1:
+        max_Hib = max(position_Hib)
+
+        most_recent_Hib_dose = int(vaccine_dose[max_Hib])
+    elif len(position_Hib) == 0:
+        most_recent_Hib_dose = 0
+
+    if age(filename) >= 19:
+        if ("Hib" not in vaccine_name) or most_recent_Hib_dose < 3:
+            results_file.write("For adults 19 and older, the  CDC recommends 1 or 3 doses of the Hib vaccine depending on indication. Please consult with your physician to determine if you are eligible to receive the Hib vaccine and how many doses you need.\n")
+        elif most_recent_Hib_dose == 3:
+            results_file.write("You are fully vaccinated with the Hib vaccine.\n")
+
+    results_file.write(" \n")
+    results_file.write("Human papillomavirus (HPV)\n")
+    results_file.write(" \n")
+
+    position_HPV = []
+    index_1 = -1
+    for item in vaccine_name:
+        index_1 += 1
+        # print(item,index)
+        if "HPV" in item:
+            position_HPV.append(index_1)
+
+    if len(position_HPV) >= 1:
+
+        max_HPV = max(position_HPV)
+
+        most_recent_HPV_dose = vaccine_dose[max_HPV]
+        most_recent_HPV_dose = int(most_recent_HPV_dose)
+    elif len(position_HPV) == 0:
+        most_recent_HPV_dose = 0
+
+    # Human papillomavirus (HPV)
+    if 19 <= age(filename) < 27:
+        if "HPV" not in vaccine_name:
+            results_file.write("It is recommended for adults in your age range to get 2-3 doses of the HPV vaccine. Please consult with your physician.\n")
+        elif most_recent_HPV_dose == 1 or most_recent_HPV_dose == 2:
+            results_file.write("It is recommended for adults in your age range to get 2-3 doses of the HPV vaccine. If you have 2, you may need a 3rd. Please consult with your physician.\n")
+        elif most_recent_HPV_dose == 3:
+            results_file.write("You are fully vaccinated against HPV.\n")
+
+    elif 27 <= age(filename) <= 45:
+        if most_recent_HPV_dose == 0:
+            results_file.write("You may be eligible to get vaccinated against HPV, please consult with your physician.\n")
+        elif most_recent_HPV_dose == 1 or most_recent_HPV_dose == 2:
+            results_file.write("You may be fully vaccinated against HPV, please consult with your physician to determine if any more vaccines are needed.\n")
+        elif most_recent_HPV_dose == 3:
+            results_file.write("You are fully vaccinated against HPV.\n")
+
+    results_file.write(" \n")
+    results_file.write("Zoster recombinant\n")
+    results_file.write(" \n")
+    position_rzv = []
+    index_2 = -1
+    for item in vaccine_name:
+        index_2 += 1
+        # print(item,index)
+        if "zos" in item:
+            position_rzv.append(index_2)
+    if len(position_rzv) >= 1:
+
+        max_rzv = max(position_rzv)
+
+        most_recent_rzv_dose = vaccine_dose[max_rzv]
+        most_recent_rzv_dose = int(most_recent_rzv_dose)
+    elif len(position_rzv) == 0:
+        most_recent_rzv_dose = 0
+
+    # Zoster recombinant (RZV)
+    if age(filename) >= 50:
+        if most_recent_rzv_dose == 0:
+            results_file.write("2 doses of the RZV vaccine are recommended for adults 50 and older. Please consult with your physician to discuss Zoster recombinant vaccination.\n")
+        elif most_recent_rzv_dose == 1:
+            results_file.write("2 doses of the RZV vaccine are recommended for adults 50 and older. You need 1 more dose to be fully vaccinated. Please consult with your physician.\n")
+        elif most_recent_rzv_dose == 2:
+            results_file.write("You are fullu vaccinated with the RZV vaccine.\n")
+    if age(filename) < 50:
+        if most_recent_rzv_dose == 0:
+            results_file.write("This vaccine is recommended for adults under 50 if they are immunocompromised. If you believe this may apply to you, please consult with your physician to discuss eligibility.\n")
+
+    results_file.write(" \n")
+    results_file.write("Varicella\n")
+    results_file.write(" \n")
+    position_var = []
+    index_2 = -1
+    for item in vaccine_name:
+        index_2 += 1
+        # print(item,index)
+        if "cella" in item:
+            position_var.append(index_2)
+    if len(position_var) >= 1:
+
+        max_var = max(position_var)
+
+        most_recent_var_dose = vaccine_dose[max_var]
+        most_recent_var_dose = int(most_recent_var_dose)
+    elif len(position_var) == 0:
+        most_recent_var_dose = 0
+
+    if age(filename) < 50:
+        if most_recent_var_dose == 0:
+            results_file.write("Get Varicella vaccine\n")
+        elif most_recent_var_dose == 1:
+            results_file.write( "Records indicate you currently have 1 dose of the varicella vaccine. To be considered fully vaccinated, you must have 2 doses. Please consult with your physician.\n")
+        elif most_recent_var_dose == 2:
+            results_file.write("You are fully vaccinated with the Varicella vaccine.\n")
+    if age(filename) >= 50:
+        if most_recent_var_dose == 0 or most_recent_var_dose == 1:
+            results_file.write("2 doses of this vaccine are recommended for adults over 50 who have additional risk factors or other indications. Please consult with your physician to see if you are eligible.\n")
+
+    results_file.write(" \n")
+    results_file.write("Measles, Mumps, Rubella\n")
+    results_file.write(" \n")
+    position_mmr = []
+    index_2 = -1
+    for item in vaccine_name:
+        index_2 += 1
+        # print(item,index)
+        if "MMR" in item:
+            position_mmr.append(index_2)
+    if len(position_mmr) >= 1:
+
+        max_mmr = max(position_mmr)
+
+        most_recent_mmr_dose = vaccine_dose[max_mmr]
+        most_recent_mmr_dose = int(most_recent_mmr_dose)
+    elif len(position_mmr) == 0:
+        most_recent_mmr_dose = 0
+
+    # measles, mumps, rubella (MMR) (not dependent on time frame, just dependent on number of doses)
+    if age(filename) < 65:
+        if most_recent_mmr_dose == 0:
+            results_file.write("1 to 2 doses of the MMR vaccine are needed to be considered fully vaccinated. Records indicate you have not received an MMR vaccine. Please consult with your physician to discuss vaccination.\n")
+        elif most_recent_mmr_dose == 1:
+            results_file.write("You are considered fully vaccinated with the MMR vaccine, but may need a second dose depending on your indication. Please consult with a physician.\n")
+        elif most_recent_mmr_dose == 2:
+            results_file.write("You are fully vaccinated with the MMR vaccine.\n")
+
+    results_file.write(" \n")
+    results_file.write("Tetanus (Tdap)\n")
+    results_file.write(" \n")
+    # Tdap COMPLETE
+    position_Tdap = []
+    Tdap_index = -1
+
+    for item in vaccine_name:
+        Tdap_index += 1
+
+        # print(item,index)
+        if "dap" in item:
+            position_Tdap.append(Tdap_index)
+
+    if len(position_Tdap) >= 1:
+        max_Tdap = max(position_Tdap)
+
+        most_recent_Tdap_date = vaccine_date_Tdap[max_Tdap]
+
+        Tdap_date_fields = most_recent_Tdap_date.split("/")
+
+        new_int_list_Tdap = []
+
+        for num in Tdap_date_fields:
+            num = int(num)
+            new_int_list_Tdap.append(num)
+
+        Tdap_year = new_int_list_Tdap[2]
+        Tdap_month = new_int_list_Tdap[0]
+        Tdap_day = new_int_list_Tdap[1]
+
+        Tdap_date = date(Tdap_year, Tdap_month, Tdap_day)
+
+    else:
+        Tdap_date = 0
+
+    # Tdap (tetanus) – 1 dose initially, then one every 10 years
+    if age(filename) >= 19:
+        if Tdap_date == 0:
+            results_file.write("Your records indicate that you have not received a Tdap vaccine. The CDC recommends 1 dose initally, and then 1 every 10 years. please discuss vaccination options with your physician.\n")
+        elif numOfDays(Tdap_date, today) >= (365 * 10):
+            results_file.write("It has been 10 years since your last Tdap vaccination dose, please discuss vaccination options with your physician.\n")
+        else:
+            results_file.write("You are up to date on your Tdap vaccine.\n")
+
+    results_file.write(" \n")
+    results_file.write("COVID-19\n")
+    results_file.write(" \n")
+    # COVID-19 - amount of doses
+
+    position_COVID = []
+    index_2 = -1
+    for item in vaccine_name:
+        index_2 += 1
+        # print(item,index)
+        if "COVID" in item:
+            position_COVID.append(index_2)
+    if len(position_COVID) >= 1:
+
+        max_COVID = max(position_COVID)
+
+        most_recent_COVID_dose = vaccine_dose[max_COVID]
+        most_recent_COVID_dose = int(most_recent_COVID_dose)
+    elif len(position_COVID) == 0:
+        most_recent_COVID_dose = 0
+
+    if age(filename) >= 19:
+        if most_recent_COVID_dose == 0:
+            results_file.write("The CDC recommends 2 doses of the Covid-19 Pfizer vaccine, or 2 doses of the COVID-19 Moderna vaccine to be considered fully vaccinated. Please consult with a physician or a pharmacist to discuss options for getting the Covid-19 vaccine.\n")
+        elif most_recent_COVID_dose == 1:
+            results_file.write("The CDC recommends 2 doses of the Covid-19 Pfizer vaccine, or 2 doses of the COVID-19 Moderna vaccine to be considered fully vaccinated. Please consult with a physician or a pharmacist to discuss options for completing your inital Covid-19 vaccination.\n")
+        elif most_recent_COVID_dose >= 2:
+            results_file.write("You are considered fully vaccinated against COVID-19, however, you may want to consider a booster dose if more than 2 months has passed since your last COVID-19 vaccination. Please consult with a physician or a pharmacist to discuss booster options.\n")
+
+
+
+# If the patient is 18 or younger, then the file will write to the user in how many years needed to use the file
+else:
+
+    results_file = open("Recommendation.txt", "w")
+    results_file.write("You need to be 19 and up to use this code: ")
+    results_file.write("Come back in " + str(19 - age(filename)) + " year(s).")
+
+results_file.close()
